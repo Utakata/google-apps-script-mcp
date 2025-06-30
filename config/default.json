@@ -1,0 +1,106 @@
+{
+  "server": {
+    "name": "google-apps-script-mcp",
+    "version": "1.0.0",
+    "description": "MCP Server for complete Google Apps Script operations"
+  },
+  "google": {
+    "apis": {
+      "script": {
+        "version": "v1",
+        "scopes": [
+          "https://www.googleapis.com/auth/script.projects",
+          "https://www.googleapis.com/auth/script.processes",
+          "https://www.googleapis.com/auth/script.deployments",
+          "https://www.googleapis.com/auth/script.metrics"
+        ]
+      },
+      "drive": {
+        "version": "v3",
+        "scopes": [
+          "https://www.googleapis.com/auth/drive.file",
+          "https://www.googleapis.com/auth/drive.metadata.readonly"
+        ]
+      }
+    },
+    "auth": {
+      "methods": ["service_account", "oauth", "default"],
+      "preferred": "service_account"
+    }
+  },
+  "mcp": {
+    "protocol": {
+      "version": "2024-11-05"
+    },
+    "capabilities": {
+      "tools": true,
+      "resources": false,
+      "prompts": false,
+      "logging": true
+    }
+  },
+  "logging": {
+    "level": "info",
+    "timestamp": true,
+    "colorize": true
+  },
+  "limits": {
+    "maxProjects": 1000,
+    "maxFilesPerProject": 100,
+    "maxFileSize": "1MB",
+    "requestTimeout": 30000
+  },
+  "tools": {
+    "create_gas_project": {
+      "enabled": true,
+      "rateLimit": "10/minute"
+    },
+    "list_gas_projects": {
+      "enabled": true,
+      "defaultPageSize": 10,
+      "maxPageSize": 100
+    },
+    "get_gas_project": {
+      "enabled": true,
+      "includeContent": true
+    },
+    "update_gas_project": {
+      "enabled": true,
+      "validateContent": true
+    },
+    "create_gas_file": {
+      "enabled": true,
+      "allowedTypes": ["SERVER_JS", "HTML"]
+    },
+    "get_gas_file": {
+      "enabled": true,
+      "includeMetadata": true
+    },
+    "update_gas_file": {
+      "enabled": true,
+      "backupOriginal": false
+    },
+    "execute_gas_function": {
+      "enabled": true,
+      "timeout": 300000,
+      "retries": 3
+    },
+    "deploy_gas_webapp": {
+      "enabled": true,
+      "autoVersion": true
+    },
+    "manage_gas_triggers": {
+      "enabled": true,
+      "maxTriggers": 20
+    },
+    "get_gas_logs": {
+      "enabled": true,
+      "defaultPageSize": 100,
+      "maxRetention": "30days"
+    },
+    "manage_gas_libraries": {
+      "enabled": true,
+      "verifyLibraries": true
+    }
+  }
+}

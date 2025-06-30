@@ -1,0 +1,54 @@
+{
+  "name": "google-apps-script-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server for Google Apps Script complete operations - プロジェクト作成、スクリプト編集、デプロイ、実行を包括的にサポート",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node test/test.js",
+    "build": "npm run test && node scripts/build-dxt.js",
+    "lint": "eslint src/**/*.js",
+    "format": "prettier --write src/**/*.js"
+  },
+  "keywords": [
+    "mcp",
+    "google-apps-script",
+    "gas",
+    "automation",
+    "claude",
+    "anthropic",
+    "javascript",
+    "google-workspace"
+  ],
+  "author": "UtaNote",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "googleapis": "^144.0.0",
+    "google-auth-library": "^9.14.1",
+    "axios": "^1.7.7",
+    "fs-extra": "^11.2.0",
+    "lodash": "^4.17.21",
+    "dayjs": "^1.11.13",
+    "chalk": "^5.3.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.3.3",
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Utakata/google-apps-script-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Utakata/google-apps-script-mcp/issues"
+  },
+  "homepage": "https://github.com/Utakata/google-apps-script-mcp#readme"
+}

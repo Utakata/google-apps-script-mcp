@@ -1,0 +1,151 @@
+# ===== 環境設定ファイル =====
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# ===== ログファイル =====
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== Node.js 関連 =====
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm
+.yarn-integrity
+
+# ===== ビルド成果物 =====
+build/
+dist/
+*.dxt
+*.zip
+*.tar.gz
+
+# ===== 認証・セキュリティ関連 =====
+credentials.json
+token.json
+client_secret*.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ===== データベース =====
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# ===== 一時ファイル =====
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+
+# ===== IDE・エディタ設定 =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ===== OS関連 =====
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon*
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===== テスト関連 =====
+coverage/
+.nyc_output/
+test-results/
+.coverage/
+
+# ===== キャッシュ =====
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist
+
+# ===== ランタイム =====
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ===== ESLint・Prettier =====
+.eslintcache
+.prettier-cache
+
+# ===== TypeScript =====
+*.tsbuildinfo
+
+# ===== パッケージ管理 =====
+.pnp
+.pnp.js
+yarn.lock
+package-lock.json
+
+# ===== 設定・秘密情報 =====
+config/production.json
+config/local.json
+secrets/
+private/
+
+# ===== バックアップ =====
+*.bak
+*.backup
+*.old
+
+# ===== Google Apps Script 関連 =====
+# clasp設定（秘密情報含む可能性）
+.clasp.json
+# Google認証トークン
+~/.clasprc.json
+
+# ===== MCP関連 =====
+# MCP設定ファイル（秘密情報含む）
+mcp-config.json
+claude_desktop_config.json
+
+# ===== 開発・テスト用 =====
+playground/
+sandbox/
+test-data/
+mock-data/
+demo-scripts/
+
+# ===== ドキュメント生成 =====
+docs/build/
+_book/
+.docusaurus/
+
+# ===== その他 =====
+.env.backup
+.vscode-test
+.idea-test
