@@ -1,0 +1,15 @@
+{
+  "dxt_version": "0.1.0",
+  "name": "google-apps-script-mcp",
+  "version": "1.1.0",
+  "description": "Google Apps Script MCP server with Clasp Integration",
+  "author": "Utakata",
+  "license": "MIT",
+  "server": {
+    "command": "node",
+    "args": ["src/index-clasp-integrated.js"],
+    "env": {},
+    "transport": "stdio",
+    "cwd": "."
+  }
+}

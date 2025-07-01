@@ -3,7 +3,7 @@
  * 
  * DXTファイル（Anthropic Desktop Extensions）を生成するスクリプト
  * 
- * Author: UtaNote
+ * Author: Utakata
  */
 
 import fs from 'fs-extra';

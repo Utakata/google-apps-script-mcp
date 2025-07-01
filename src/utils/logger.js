@@ -3,7 +3,7 @@
  * 
  * カラー出力とログレベル管理
  * 
- * Author: UtaNote
+ * Author: Utakata
  */
 
 import chalk from 'chalk';

@@ -1,225 +1,60 @@
 {
+  "dxt_version": "0.1",
   "name": "google-apps-script-mcp",
-  "version": "1.0.0", 
-  "description": "🔒 セキュリティ重視のGoogle Apps Script完全操作MCPサーバー - スクリプトプロパティ暗号化対応",
-  "author": "UtaNote",
-  "license": "MIT",
-  "homepage": "https://github.com/Utakata/google-apps-script-mcp",
+  "display_name": "Google Apps Script MCP Server",
+  "version": "1.1.0",
+  "description": "🚀 MCP Server for Google Apps Script complete operations with Clasp Integration - プロジェクト作成、スクリプト編集、デプロイ、実行、CLI統合を包括的にサポート",
+  "long_description": "Google Apps Script MCP Server は、Google Apps Script プロジェクトの包括的な操作を提供する先進的なMCPサーバーです。Clasp CLIとの完全統合により、プロジェクト作成、スクリプト編集、デプロイメント、実行、ライブラリ管理まで、開発ワークフロー全体をシームレスにサポートします。",
+  "author": {
+    "name": "Utakata"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Utakata/google-apps-script-mcp.git"
   },
-  "keywords": [
-    "google-apps-script",
-    "gas", 
-    "mcp",
-    "claude",
-    "security",
-    "encryption",
-    "automation",
-    "script-properties"
-  ],
-  "mcp": {
-    "server": {
-      "name": "google-apps-script-mcp",
-      "version": "1.0.0",
+  "homepage": "https://github.com/Utakata/google-apps-script-mcp#readme",
+  "support": "https://github.com/Utakata/google-apps-script-mcp/issues",
+  "keywords": ["mcp", "google-apps-script", "gas", "automation", "claude", "anthropic", "javascript", "google-workspace", "clasp", "cli", "dxt"],
+  "license": "MIT",
+  "server": {
+    "type": "node",
+    "entry_point": "src/index-clasp-integrated.js",
+    "mcp_config": {
       "command": "node",
-      "args": ["src/index-security.js"],
-      "capabilities": {
-        "tools": true,
-        "resources": false,
-        "prompts": false,
-        "logging": true
-      },
-      "env": {
-        "LOG_LEVEL": "info",
-        "MCP_SERVER_NAME": "google-apps-script-mcp"
-      }
-    },
-    "protocol": {
-      "version": "2024-11-05"
+      "args": ["${__dirname}/src/index-clasp-integrated.js"]
     }
   },
-  "features": [
+  "tools": [
     {
-      "name": "🔒 セキュアなスクリプトプロパティ管理",
-      "description": "AES-256-GCM暗号化でAPIキー・パスワードを安全に保存・管理",
-      "tools": [
-        "set_secure_property",
-        "get_secure_property", 
-        "delete_property",
-        "list_properties"
-      ]
+      "name": "clasp_setup",
+      "description": "Setup Clasp CLI environment and authenticate with Google"
     },
     {
-      "name": "🛡️ セキュリティ監査・バックアップ",
-      "description": "プロパティの脆弱性チェック・安全なバックアップ・復元機能",
-      "tools": [
-        "audit_properties",
-        "backup_properties",
-        "restore_properties"
-      ]
+      "name": "clasp_create",
+      "description": "Create a new Google Apps Script project"
     },
     {
-      "name": "📁 プロジェクト管理",
-      "description": "Google Apps Scriptプロジェクトの作成・更新・削除・一覧取得",
-      "tools": [
-        "create_gas_project",
-        "list_gas_projects",
-        "get_gas_project", 
-        "update_gas_project"
-      ]
+      "name": "clasp_clone",
+      "description": "Clone an existing Google Apps Script project"
     },
     {
-      "name": "📄 ファイル操作",
-      "description": "スクリプト・HTMLファイルの作成・読み取り・更新",
-      "tools": [
-        "create_gas_file",
-        "get_gas_file",
-        "update_gas_file"
-      ]
+      "name": "clasp_pull",
+      "description": "Pull latest changes from Google Apps Script"
     },
     {
-      "name": "🚀 実行・デプロイ",
-      "description": "関数実行・Webアプリデプロイ・バージョン管理",
-      "tools": [
-        "execute_gas_function",
-        "deploy_gas_webapp"
-      ]
+      "name": "clasp_push_and_deploy",
+      "description": "Push changes and deploy to Google Apps Script"
     },
     {
-      "name": "⚡ トリガー・ログ管理",
-      "description": "時間・イベントトリガー管理・実行ログ監視",
-      "tools": [
-        "manage_gas_triggers",
-        "get_gas_logs"
-      ]
-    },
-    {
-      "name": "📚 ライブラリ管理",
-      "description": "外部ライブラリの追加・更新・削除・バージョン管理",
-      "tools": [
-        "manage_gas_libraries"
-      ]
+      "name": "clasp_list",
+      "description": "List all Google Apps Script projects"
     }
   ],
-  "requirements": {
-    "node": ">=18.0.0",
-    "dependencies": [
-      "@modelcontextprotocol/sdk",
-      "googleapis",
-      "google-auth-library", 
-      "axios",
-      "fs-extra",
-      "lodash",
-      "dayjs",
-      "chalk"
-    ]
-  },
-  "security": {
-    "encryption": {
-      "algorithm": "AES-256-GCM",
-      "keyLength": 256,
-      "description": "スクリプトプロパティの暗号化に使用"
-    },
-    "authentication": {
-      "methods": ["service_account", "oauth2", "default"],
-      "preferred": "service_account",
-      "scopes": [
-        "https://www.googleapis.com/auth/script.projects",
-        "https://www.googleapis.com/auth/script.processes",
-        "https://www.googleapis.com/auth/script.deployments", 
-        "https://www.googleapis.com/auth/script.metrics",
-        "https://www.googleapis.com/auth/drive.file",
-        "https://www.googleapis.com/auth/drive.metadata.readonly"
-      ]
-    },
-    "features": [
-      "プロパティ暗号化",
-      "セキュリティ監査",
-      "チェックサム検証",
-      "アクセス制御"
-    ]
-  },
-  "setup": {
-    "steps": [
-      {
-        "step": 1,
-        "title": "Google Cloud プロジェクト設定",
-        "description": "Google Cloud Consoleでプロジェクトを作成し、Google Apps Script APIを有効化"
-      },
-      {
-        "step": 2,
-        "title": "認証設定",
-        "description": "Service Accountを作成してキーを取得、またはOAuth2.0認証情報を設定"
-      },
-      {
-        "step": 3,
-        "title": "環境変数設定",
-        "description": "GOOGLE_SERVICE_ACCOUNT_KEYまたはGOOGLE_CREDENTIALS_PATHを設定"
-      },
-      {
-        "step": 4,
-        "title": "暗号化キー設定（推奨）",
-        "description": "ENCRYPTION_KEY環境変数を設定してセキュリティを強化"
-      }
-    ],
-    "envVars": [
-      {
-        "name": "GOOGLE_SERVICE_ACCOUNT_KEY",
-        "required": "conditional",
-        "description": "Service AccountキーのJSON文字列またはファイルパス",
-        "example": "{\"type\":\"service_account\",...}"
-      },
-      {
-        "name": "GOOGLE_CREDENTIALS_PATH", 
-        "required": "conditional",
-        "description": "OAuth2.0認証情報ファイルのパス",
-        "example": "/path/to/credentials.json"
-      },
-      {
-        "name": "GOOGLE_AUTH_CODE",
-        "required": false,
-        "description": "OAuth認証コード（初回認証時のみ）",
-        "example": "4/0AX4XfWh..."
-      },
-      {
-        "name": "ENCRYPTION_KEY",
-        "required": false,
-        "description": "64文字のhex暗号化キー（推奨）",
-        "example": "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
-      },
-      {
-        "name": "LOG_LEVEL",
-        "required": false,
-        "description": "ログレベル",
-        "default": "info",
-        "options": ["debug", "info", "warn", "error"]
-      }
-    ]
-  },
-  "documentation": {
-    "readme": "README.md",
-    "examples": "docs/examples/",
-    "api": "docs/api.md",
-    "security": "docs/security.md"
-  },
-  "build": {
-    "output": "google-apps-script-mcp.dxt",
-    "include": [
-      "src/",
-      "config/",
-      "package.json",
-      "README.md",
-      "LICENSE"
-    ],
-    "exclude": [
-      "node_modules/",
-      ".git/",
-      "test/",
-      "docs/",
-      ".env*",
-      "*.log"
-    ]
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
   }
 }

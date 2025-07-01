@@ -6,7 +6,7 @@
  * - OAuth2.0認証 
  * - APIクライアント初期化
  * 
- * Author: UtaNote
+ * Author: Utakata
  */
 
 import { GoogleAuth as GoogleAuthLib } from 'google-auth-library';

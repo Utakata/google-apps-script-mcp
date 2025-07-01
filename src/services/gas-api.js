@@ -8,7 +8,7 @@
  * - トリガー管理
  * - ログ・監視
  * 
- * Author: UtaNote
+ * Author: Utakata
  */
 
 import { GoogleAuth } from '../auth/google-auth.js';

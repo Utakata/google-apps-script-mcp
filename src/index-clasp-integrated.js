@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Google Apps Script MCP Server
+ * Google Apps Script MCP Server (Clasp統合版)
  * 
  * 完全なGoogle Apps Script操作を提供するMCPサーバー
  * - プロジェクト管理（作成・更新・削除・一覧）
@@ -9,8 +9,10 @@
  * - デプロイ管理（Webアプリ・アドオン・ライブラリ）
  * - トリガー管理（時間・イベント・フォーム連動）
  * - 実行ログ・エラー監視
+ * - Clasp統合（セットアップ・クローン・プッシュ・デプロイ）
  * 
  * Author: Utakata
+ * Session: google-apps-script-mcp-20250630-002
  * License: MIT
  */
 
@@ -25,13 +27,14 @@ import {
 
 import { GoogleAuth } from './auth/google-auth.js';
 import { GASApiService } from './services/gas-api.js';
+import { ClaspService } from './services/clasp-service-es6.js';
 import { chalk } from './utils/logger.js';
 import { validateEnvironment } from './utils/validation.js';
 
 class GoogleAppsScriptMCPServer {
   constructor() {
     this.name = 'google-apps-script-mcp';
-    this.version = '1.0.0';
+    this.version = '1.1.0'; // clasp統合でバージョンアップ
     this.server = new Server(
       {
         name: this.name,
@@ -46,6 +49,7 @@ class GoogleAppsScriptMCPServer {
 
     this.googleAuth = new GoogleAuth();
     this.gasApi = new GASApiService();
+    this.claspService = new ClaspService(); // clasp統合サービス追加
     this.setupToolHandlers();
   }
 
@@ -57,6 +61,174 @@ class GoogleAppsScriptMCPServer {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       return {
         tools: [
+          // === Clasp統合機能 ===
+          {
+            name: 'clasp_setup',
+            description: 'clasp環境のセットアップ（claspのインストール、ログイン）を行います',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                autoInstall: {
+                  type: 'boolean',
+                  description: '自動インストールするかどうか',
+                  default: true
+                },
+                autoLogin: {
+                  type: 'boolean',
+                  description: '自動ログインするかどうか',
+                  default: true
+                },
+                loginOptions: {
+                  type: 'object',
+                  properties: {
+                    noLocalhost: {
+                      type: 'boolean',
+                      description: 'ローカルホストを使用しないかどうか'
+                    },
+                    creds: {
+                      type: 'string',
+                      description: '認証情報ファイルのパス'
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            name: 'clasp_create',
+            description: '新しいGoogle Apps Scriptプロジェクトを作成します',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                projectName: {
+                  type: 'string',
+                  description: 'プロジェクト名'
+                },
+                type: {
+                  type: 'string',
+                  enum: ['standalone', 'webapp', 'api', 'sheets', 'docs', 'slides', 'forms'],
+                  description: 'プロジェクトタイプ',
+                  default: 'standalone'
+                },
+                title: {
+                  type: 'string',
+                  description: 'プロジェクトタイトル'
+                },
+                directory: {
+                  type: 'string',
+                  description: 'プロジェクトディレクトリ'
+                },
+                parentId: {
+                  type: 'string',
+                  description: 'Google Driveの親フォルダID'
+                },
+                createInitialFiles: {
+                  type: 'boolean',
+                  description: '初期ファイルを作成するかどうか',
+                  default: true
+                }
+              },
+              required: ['projectName']
+            }
+          },
+          {
+            name: 'clasp_clone',
+            description: '既存のGoogle Apps Scriptプロジェクトをクローンします',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                scriptId: {
+                  type: 'string',
+                  description: 'スクリプトID'
+                },
+                directory: {
+                  type: 'string',
+                  description: 'クローン先ディレクトリ'
+                }
+              },
+              required: ['scriptId']
+            }
+          },
+          {
+            name: 'clasp_pull',
+            description: 'リモートの変更をローカルプロジェクトに取得します（環境切替対応）',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                projectDir: {
+                  type: 'string',
+                  description: 'プロジェクトディレクトリ'
+                },
+                environment: {
+                  type: 'string',
+                  enum: ['development', 'staging', 'production'],
+                  description: '対象環境'
+                },
+                versionNumber: {
+                  type: 'number',
+                  description: '取得するバージョン番号'
+                }
+              },
+              required: ['projectDir']
+            }
+          },
+          {
+            name: 'clasp_push_and_deploy',
+            description: 'ローカルの変更をプッシュし、必要に応じてデプロイします（環境切替対応）',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                projectDir: {
+                  type: 'string',
+                  description: 'プロジェクトディレクトリ'
+                },
+                environment: {
+                  type: 'string',
+                  enum: ['development', 'staging', 'production'],
+                  description: '対象環境'
+                },
+                deploy: {
+                  type: 'boolean',
+                  description: 'デプロイも実行するかどうか',
+                  default: true
+                },
+                force: {
+                  type: 'boolean',
+                  description: '強制プッシュするかどうか',
+                  default: false
+                },
+                watch: {
+                  type: 'boolean',
+                  description: 'ウォッチモードで実行するかどうか',
+                  default: false
+                },
+                deployDescription: {
+                  type: 'string',
+                  description: 'デプロイの説明'
+                },
+                versionNumber: {
+                  type: 'number',
+                  description: 'デプロイするバージョン番号'
+                }
+              },
+              required: ['projectDir']
+            }
+          },
+          {
+            name: 'clasp_list',
+            description: 'アカウントに紐づくGoogle Apps Scriptプロジェクトの一覧を表示します',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                includeDetails: {
+                  type: 'boolean',
+                  description: '詳細情報も取得するかどうか',
+                  default: false
+                }
+              }
+            }
+          },
+
           // === プロジェクト管理 ===
           {
             name: 'create_gas_project',
@@ -369,11 +541,28 @@ class GoogleAppsScriptMCPServer {
       const { name, arguments: args } = request.params;
 
       try {
-        // 認証確認
-        await this.ensureAuthenticated();
+        // Clasp機能の場合は認証不要、API機能の場合は認証確認
+        if (!name.startsWith('clasp_')) {
+          await this.ensureAuthenticated();
+        }
 
         // ツール実行
         switch (name) {
+          // === Clasp統合機能 ===
+          case 'clasp_setup':
+            return await this.claspSetup(args);
+          case 'clasp_create':
+            return await this.claspCreate(args);
+          case 'clasp_clone':
+            return await this.claspClone(args);
+          case 'clasp_pull':
+            return await this.claspPull(args);
+          case 'clasp_push_and_deploy':
+            return await this.claspPushAndDeploy(args);
+          case 'clasp_list':
+            return await this.claspList(args);
+
+          // === 既存のAPI機能 ===
           case 'create_gas_project':
             return await this.createGasProject(args);
           case 'list_gas_projects':
@@ -423,7 +612,258 @@ class GoogleAppsScriptMCPServer {
     }
   }
 
-  // ===== ツール実装メソッド =====
+  // ===== Clasp統合ツール実装メソッド =====
+
+  async claspSetup(args) {
+    try {
+      const result = await this.claspService.setupClasp(args);
+      
+      let text = `🔧 clasp環境セットアップ完了\n\n`;
+      
+      // インストール結果
+      if (result.installation) {
+        if (result.installation.status === 'already_installed') {
+          text += `📦 clasp: すでにインストール済み\n`;
+        } else if (result.installation.status === 'installed') {
+          text += `📦 clasp: グローバルインストール完了\n`;
+        }
+      }
+      
+      // バージョン情報
+      if (result.version) {
+        text += `🏷️ バージョン: ${result.version}\n`;
+      }
+      
+      // ログイン結果
+      if (result.login) {
+        if (result.login.status === 'already_logged_in') {
+          text += `🔐 ログイン: すでにログイン済み\n`;
+          if (result.login.user) {
+            text += `👤 ユーザー: ${result.login.user}\n`;
+          }
+        } else if (result.login.status === 'logged_in') {
+          text += `🔐 ログイン: 完了\n`;
+        }
+      }
+      
+      text += `\n✅ clasp準備完了！これでGoogle Apps Scriptプロジェクトの管理ができます。`;
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: text
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ clasp環境セットアップエラー: ${error.message}`
+          }
+        ]
+      };
+    }
+  }
+
+  async claspCreate(args) {
+    try {
+      const result = await this.claspService.createProject(args.projectName, args);
+      
+      let text = `📁 GASプロジェクト作成完了\n\n`;
+      text += `🎯 プロジェクト名: ${result.projectName}\n`;
+      text += `🆔 スクリプトID: ${result.scriptId}\n`;
+      text += `📂 タイプ: ${result.type}\n`;
+      text += `📁 ディレクトリ: ${result.projectDir}\n`;
+      text += `🔗 編集URL: https://script.google.com/d/${result.scriptId}/edit\n\n`;
+      
+      if (args.createInitialFiles !== false) {
+        text += `✨ 初期ファイル構造を作成しました\n`;
+        text += `- Code.js (メインスクリプト)\n`;
+        text += `- appsscript.json (マニフェスト)\n`;
+        if (result.type === 'webapp') {
+          text += `- index.html (Webアプリ用HTML)\n`;
+        }
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: text
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ GASプロジェクト作成エラー: ${error.message}`
+          }
+        ]
+      };
+    }
+  }
+
+  async claspClone(args) {
+    try {
+      const result = await this.claspService.cloneProject(args.scriptId, args);
+      
+      let text = `🔄 GASプロジェクトクローン完了\n\n`;
+      text += `🆔 スクリプトID: ${result.scriptId}\n`;
+      text += `📁 クローン先: ${result.cloneDir}\n`;
+      
+      if (result.projectInfo) {
+        text += `\n📊 プロジェクト情報:\n`;
+        for (const [key, value] of Object.entries(result.projectInfo)) {
+          text += `  ${key}: ${value}\n`;
+        }
+      }
+      
+      text += `\n✅ ローカル開発環境の準備完了！`;
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: text
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ GASプロジェクトクローンエラー: ${error.message}`
+          }
+        ]
+      };
+    }
+  }
+
+  async claspPull(args) {
+    try {
+      const result = await this.claspService.pullChanges(args.projectDir, args);
+      
+      let text = `📥 リモート変更取得完了\n\n`;
+      text += `📁 プロジェクト: ${result.projectDir}\n`;
+      
+      if (result.environment) {
+        text += `🔄 環境: ${result.environment}\n`;
+      }
+      
+      text += `📄 更新ファイル数: ${result.changedFiles.length}\n`;
+      
+      if (result.changedFiles.length > 0) {
+        text += `\n📂 更新されたファイル:\n`;
+        result.changedFiles.forEach(file => {
+          text += `  - ${file}\n`;
+        });
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: text
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ リモート変更取得エラー: ${error.message}`
+          }
+        ]
+      };
+    }
+  }
+
+  async claspPushAndDeploy(args) {
+    try {
+      const result = await this.claspService.pushAndDeploy(args.projectDir, args);
+      
+      let text = `📤 プッシュ・デプロイ完了\n\n`;
+      text += `📁 プロジェクト: ${result.projectDir}\n`;
+      
+      if (result.environment) {
+        text += `🔄 環境: ${result.environment}\n`;
+      }
+      
+      text += `✅ プッシュ: 完了\n`;
+      
+      if (result.deployOutput) {
+        text += `🚀 デプロイ: 完了\n`;
+        if (result.deployUrl) {
+          text += `🌐 デプロイURL: ${result.deployUrl}\n`;
+        }
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: text
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ プッシュ・デプロイエラー: ${error.message}`
+          }
+        ]
+      };
+    }
+  }
+
+  async claspList(args) {
+    try {
+      const result = await this.claspService.listProjects(args);
+      
+      let text = `📋 GASプロジェクト一覧 (${result.count}件)\n\n`;
+      
+      if (result.projects.length > 0) {
+        result.projects.forEach((project, index) => {
+          text += `${index + 1}. **${project.name}**\n`;
+          text += `   🆔 ID: ${project.scriptId}\n`;
+          text += `   🔗 URL: https://script.google.com/d/${project.scriptId}/edit\n\n`;
+        });
+      } else {
+        text += `プロジェクトが見つかりませんでした。\n`;
+        text += `新しいプロジェクトを作成するには \`clasp_create\` ツールを使用してください。`;
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: text
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ GASプロジェクト一覧取得エラー: ${error.message}`
+          }
+        ]
+      };
+    }
+  }
+
+  // ===== 既存のツール実装メソッド =====
+  // (元のindex.jsから引き継ぎ)
 
   async createGasProject(args) {
     const result = await this.gasApi.createProject(args.title, args.parentId);
@@ -737,6 +1177,7 @@ class GoogleAppsScriptMCPServer {
     validateEnvironment();
     
     console.log(chalk.blue(`🚀 Google Apps Script MCP Server v${this.version} 起動中...`));
+    console.log(chalk.green('🔧 Clasp統合機能が利用可能です'));
     
     const transport = new StdioServerTransport();
     await this.server.connect(transport);

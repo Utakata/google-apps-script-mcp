@@ -1,0 +1,52 @@
+{
+  "dxt_version": "0.1.0",
+  "name": "google-apps-script-mcp",
+  "version": "1.1.0",
+  "description": "Google Apps Script MCP server with Clasp Integration",
+  "author": {
+    "name": "Utakata",
+    "email": "contact@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Utakata/google-apps-script-mcp.git"
+  },
+  "server": {
+    "command": "node",
+    "args": [
+      "src/index-clasp-integrated.js"
+    ],
+    "env": {}
+  },
+  "keywords": [
+    "mcp",
+    "google-apps-script",
+    "gas",
+    "automation",
+    "claude",
+    "clasp"
+  ],
+  "capabilities": {
+    "tools": [
+      "clasp_setup",
+      "clasp_create",
+      "clasp_clone",
+      "clasp_pull",
+      "clasp_push_and_deploy",
+      "clasp_list",
+      "create_gas_project",
+      "list_gas_projects",
+      "get_gas_project",
+      "update_gas_project",
+      "create_gas_file",
+      "get_gas_file",
+      "update_gas_file",
+      "execute_gas_function",
+      "deploy_gas_webapp",
+      "manage_gas_triggers",
+      "get_gas_logs",
+      "manage_gas_libraries"
+    ]
+  }
+}

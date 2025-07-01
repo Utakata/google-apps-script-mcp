@@ -3,7 +3,7 @@
  *
  * 基本的な機能テストとセキュリティテストを実装
  *
- * Author: UtaNote
+ * Author: Utakata
  */
 
 const assert = require('assert');

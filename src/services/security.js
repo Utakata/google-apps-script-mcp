@@ -4,7 +4,7 @@
  * Google Apps Scriptのスクリプトプロパティを活用した
  * セキュアな情報管理とアクセス制御
  * 
- * Author: UtaNote
+ * Author: Utakata
  */
 
 import crypto from 'crypto';

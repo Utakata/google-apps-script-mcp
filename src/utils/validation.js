@@ -3,7 +3,7 @@
  * 
  * 必要な環境変数の確認と検証
  * 
- * Author: UtaNote
+ * Author: Utakata
  */
 
 import { logger } from './logger.js';

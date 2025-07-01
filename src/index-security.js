@@ -12,7 +12,7 @@
  * - 🔒 セキュアなスクリプトプロパティ管理（暗号化対応）
  * - 🛡️ セキュリティ監査・バックアップ・復元
  * 
- * Author: UtaNote
+ * Author: Utakata
  * License: MIT
  */
 
