@@ -3,8 +3,8 @@
   "name": "google-apps-script-mcp",
   "display_name": "Google Apps Script MCP Server",
   "version": "1.1.0",
-  "description": "🚀 MCP Server for Google Apps Script with Smart Runtime Dependencies - プロジェクト作成、スクリプト編集、デプロイ、実行、CLI統合を包括的にサポート",
-  "long_description": "Google Apps Script MCP Server は、Google Apps Script プロジェクトの包括的な操作を提供する先進的なMCPサーバーです。Smart Runtime依存関係解決システムにより、軽量で確実な動作を実現します。",
+  "description": "🚀 MCP Server for Google Apps Script - Stable Production Version - プロジェクト作成、スクリプト編集、デプロイ、CLI統合を包括的にサポート",
+  "long_description": "Google Apps Script MCP Server は、Google Apps Script プロジェクトの包括的な操作を提供する先進的なMCPサーバーです。プロダクション対応の安定版で、確実な動作を実現します。",
   "author": {
     "name": "Utakata"
   },
@@ -18,16 +18,16 @@
   "license": "MIT",
   "server": {
     "type": "node",
-    "entry_point": "src/index-smart-runtime.js",
+    "entry_point": "src/index-stable-fixed.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/src/index-smart-runtime.js"]
+      "args": ["${__dirname}/src/index-stable-fixed.js"]
     }
   },
   "tools": [
     {
-      "name": "smart_dependency_check",
-      "description": "Check and resolve runtime dependencies automatically"
+      "name": "dependency_check",
+      "description": "Check system dependencies and environment"
     },
     {
       "name": "clasp_setup",
